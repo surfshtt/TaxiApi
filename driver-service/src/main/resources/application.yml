@@ -1,0 +1,27 @@
+server:
+  port: 8082
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+spring:
+  application:
+    name: driver-service
+  profiles:
+    default: local
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    open-in-view: false
+
+  liquibase:
+    change-log: classpath:changelogs/25-01-driver-changelog.xml

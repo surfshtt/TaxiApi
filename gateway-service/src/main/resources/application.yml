@@ -1,0 +1,38 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway-service
+
+  cloud:
+    gateway:
+        server:
+          webflux:
+            routes:
+              - id: passenger-service
+                uri: lb://PASSENGER-SERVICE
+                predicates:
+                  - Path=/api/passenger/**
+                  - Path=/api/passenger
+
+              - id: driver-service
+                uri: lb://DRIVER-SERVICE
+                predicates:
+                  - Path=/api/driver/**
+                  - Path=/api/driver
+
+              - id: trip-service
+                uri: lb://TRIP-SERVICE
+                predicates:
+                  - Path=/api/trip/**
+
+              - id: rating-service
+                uri: lb://RATING-SERVICE
+                predicates:
+                  - Path=/api/rating/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

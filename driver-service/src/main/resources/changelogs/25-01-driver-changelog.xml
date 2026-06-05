@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1779705838929-4" author="fk8ght">
+        <createTable tableName="drivers">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_drivers"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1779705838929-5" author="fk8ght">
+        <addUniqueConstraint columnNames="email" constraintName="uc_drivers_email" tableName="drivers"/>
+    </changeSet>
+    <changeSet id="1779705838929-6" author="fk8ght">
+        <addUniqueConstraint columnNames="phone" constraintName="uc_drivers_phone" tableName="drivers"/>
+    </changeSet>
+    <changeSet id="1779705838929-7" author="fk8ght">
+        <createTable tableName="cars">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_cars"/>
+            </column>
+            <column name="color" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="brand" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="plate_number" type="VARCHAR(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="driver_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1779705838929-8" author="fk8ght">
+        <addUniqueConstraint columnNames="plate_number" constraintName="uc_cars_plate_number" tableName="cars"/>
+    </changeSet>
+    <changeSet id="1779705838929-9" author="fk8ght">
+        <addForeignKeyConstraint baseColumnNames="driver_id" baseTableName="cars"
+                                 constraintName="fk_cars_driver" referencedColumnNames="id"
+                                 referencedTableName="drivers"/>
+    </changeSet>
+    <changeSet id="1779705838929-16-driver" author="fk8ght">
+        <insert tableName="drivers">
+            <column name="name" value="Sergey Volkov"/>
+            <column name="email" value="sergey@example.com"/>
+            <column name="phone" value="+375292222222"/>
+            <column name="deleted" valueBoolean="false"/>
+        </insert>
+        <insert tableName="cars">
+            <column name="color" value="white"/>
+            <column name="brand" value="Volkswagen"/>
+            <column name="plate_number" value="1234 AB-7"/>
+            <column name="driver_id" valueNumeric="1"/>
+            <column name="deleted" valueBoolean="false"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
