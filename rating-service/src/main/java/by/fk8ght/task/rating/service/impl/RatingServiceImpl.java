@@ -10,6 +10,7 @@ import by.fk8ght.task.rating.model.dto.TripDTO;
 import by.fk8ght.task.rating.model.dto.TripStatus;
 import by.fk8ght.task.rating.model.entity.RatedBy;
 import by.fk8ght.task.rating.model.entity.Rating;
+import by.fk8ght.task.rating.model.event.TripCompleted;
 import by.fk8ght.task.rating.model.mapper.RatingMapper;
 import by.fk8ght.task.rating.repository.RatingRepository;
 import by.fk8ght.task.rating.service.RatingService;
@@ -46,6 +47,26 @@ public class RatingServiceImpl implements RatingService {
         return repository.findAllByTripId(tripId).stream().map(mapper::toDto).toList();
     }
 
+    @Override
+    public void consumersSignal(TripCompleted event){
+        Rating rating1 = new Rating();
+        rating1.setTripId(event.getTripId());
+        rating1.setDriverId(event.getDriverId());
+        rating1.setPassengerId(event.getPassengerId());
+        rating1.setRatedBy(RatedBy.DRIVER);
+        rating1.setScore(-1);
+
+        Rating rating2 = new Rating();
+        rating2.setTripId(event.getTripId());
+        rating2.setDriverId(event.getDriverId());
+        rating2.setPassengerId(event.getPassengerId());
+        rating2.setRatedBy(RatedBy.PASSENGER);
+        rating2.setScore(-1);
+
+        repository.save(rating1);
+        repository.save(rating2);
+    }
+
     private RatingDTO saveRating(long tripId, RatedBy ratedBy, CreateRatingDTO dto) {
         TripDTO trip = validateAndGetTrip(tripId);
 
@@ -53,15 +74,7 @@ public class RatingServiceImpl implements RatingService {
             throw new BadRequestException("Trip must be completed before rating");
         }
 
-        if (repository.existsByTripIdAndRatedBy(tripId, ratedBy)) {
-            throw new ConflictException("Trip is already rated");
-        }
-
-        Rating rating = new Rating();
-        rating.setTripId(tripId);
-        rating.setDriverId(trip.getDriverId());
-        rating.setPassengerId(trip.getPassengerId());
-        rating.setRatedBy(ratedBy);
+        Rating rating = repository.findByTripIdAndRatedBy(tripId, ratedBy).orElseThrow( () -> new BadRequestException("Rating doesn't exists"));
         rating.setScore(dto.getScore());
         rating.setComment(dto.getComment());
 

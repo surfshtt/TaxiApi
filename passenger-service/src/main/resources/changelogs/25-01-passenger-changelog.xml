@@ -36,5 +36,4 @@
             <column name="deleted" valueBoolean="false"/>
         </insert>
     </changeSet>
-    <include file="changelogs/25-01-passenger-changelog.xml"/>
 </databaseChangeLog>

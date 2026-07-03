@@ -11,8 +11,6 @@ import java.util.Optional;
 @Repository
 public interface RatingRepository extends JpaRepository<Rating, Long> {
     boolean existsByTripIdAndRatedBy(long tripId, RatedBy ratedBy);
-
     List<Rating> findAllByTripId(long tripId);
-
     Optional<Rating> findByTripIdAndRatedBy(long tripId, RatedBy ratedBy);
 }

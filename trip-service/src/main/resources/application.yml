@@ -25,6 +25,18 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
 
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+    consumer:
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+    properties:
+        spring.json.trusted.packages: "*"
+
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -33,3 +45,8 @@ spring:
 
   liquibase:
     change-log: classpath:changelogs/25-01-trip-changelog.xml
+
+jwt:
+  secret: ${JWT_SECRET:secretsecretsecretsecretsecretsecretsecretsecretsecret}
+  access-token-expiration-minutes: 15
+  refresh-token-expiration-days: 7

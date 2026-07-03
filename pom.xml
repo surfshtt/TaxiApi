@@ -18,6 +18,8 @@
     <description>Taxi microservices system</description>
 
     <modules>
+        <module>jwt-security</module>
+        <module>auth-service</module>
         <module>passenger-service</module>
         <module>driver-service</module>
         <module>trip-service</module>
@@ -31,6 +33,7 @@
         <springdoc.version>2.5.0</springdoc.version>
         <postgresql.version>42.6.0</postgresql.version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
+        <jjwt.version>0.12.6</jjwt.version>
     </properties>
 
     <dependencyManagement>
@@ -56,6 +59,21 @@
                 <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
