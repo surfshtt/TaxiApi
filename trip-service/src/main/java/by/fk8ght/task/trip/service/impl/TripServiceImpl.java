@@ -8,6 +8,7 @@ import by.fk8ght.task.trip.model.dto.PassengerDTO;
 import by.fk8ght.task.trip.model.dto.TripDTO;
 import by.fk8ght.task.trip.model.entity.Trip;
 import by.fk8ght.task.trip.model.entity.TripStatus;
+import by.fk8ght.task.trip.model.event.TripCompleted;
 import by.fk8ght.task.trip.model.mapper.TripMapper;
 import by.fk8ght.task.trip.repository.TripRepository;
 import by.fk8ght.task.trip.service.TripService;
@@ -17,6 +18,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,6 +30,7 @@ public class TripServiceImpl implements TripService {
     private final DriverClient driverClient;
     private final PassengerClient passengerClient;
     private final TripMapper mapper;
+    private final KafkaTemplate<String, TripCompleted> kafkaTemplate;
 
     @Override
     public Page<TripDTO> getTrips(Pageable pageable) {
@@ -84,6 +87,10 @@ public class TripServiceImpl implements TripService {
     public void updateStatus(long id, TripStatus status) {
         Trip trip = repository.findById(id).orElseThrow(() -> new NotFoundException("Trip wasn't found"));
         trip.setStatus(status);
+
+        if(status == TripStatus.COMPLETED){
+            kafkaTemplate.send("trip-completed", new TripCompleted(trip.getId(), trip.getDriverId(), trip.getPassengerId()));
+        }
     }
 
     //я знаю что это глуповатое решение, не хотел на бизнес логике зацикливаться

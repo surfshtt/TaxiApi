@@ -25,3 +25,8 @@ spring:
 
   liquibase:
     change-log: classpath:changelogs/25-01-passenger-changelog.xml
+
+jwt:
+  secret: ${JWT_SECRET:secretsecretsecretsecretsecretsecretsecretsecretsecret}
+  access-token-expiration-minutes: 15
+  refresh-token-expiration-days: 7
